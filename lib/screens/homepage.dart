@@ -8,6 +8,7 @@ class homepage extends StatefulWidget {
     return homepagestate();
   }
 }
+
 class homepagestate extends State<homepage> {
   Widget build(BuildContext context) {
     var token;
@@ -23,7 +24,7 @@ class homepagestate extends State<homepage> {
               child: Center(
                 child: Text('''Congrats Logged In
 Your Personal token is 
-'${token}' ''')
+'$token' ''')
             )
             ))
            );

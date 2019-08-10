@@ -1,24 +1,25 @@
-import 'dart:io';
-import 'package:http/http.dart';
 import 'package:flutter/material.dart';
-import 'package:lets_pole/admin_login_page.dart';
+import 'package:lets_pole/screens/poll_creation_form.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:lets_pole/first_view.dart';
-import 'package:lets_pole/homepage.dart';
-import 'dart:convert';
+import 'package:lets_pole/screens/first_view.dart';
+import 'package:lets_pole/screens/homepage.dart';
 
 const server_url = "http://192.168.43.232:8000";
 String initial_route = '/';
 void main() async {
   var store = FlutterSecureStorage();
   var token = await store.read(key: 'letspoll');
-  if (token == null) {
-    Client client;
-    var response = await client.get('${server_url}/',
-        headers: {'AUTH-TOKEN': token});
-    Map<String, dynamic> authorization_info = json.decode(response.body);
-    }
-  runApp(MyApp());
+  if (token != null) {
+    print('homepage');
+    initial_route = '/homepage';
+    runApp(MyApp());
+  } else if(token==null){
+    print('/');
+    initial_route = '/';
+    runApp(MyApp());
+  } else {
+    print("Hello Wordl");
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData( // This is the theme of your application.
+      theme: ThemeData(
+        // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
         // application has a blue toolbar. Then, without quitting the app, try
@@ -38,10 +40,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: initial_route,
       routes: {
         '/': (context) => first_view(),
-        '/a_l_p': (context) => admin_login_page(),
+        '/p_c_f': (context) => poll_creation_form(),
         '/homepage': (context) => homepage(),
       },
     );

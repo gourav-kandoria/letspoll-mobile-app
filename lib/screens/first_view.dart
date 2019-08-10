@@ -27,7 +27,7 @@ class first_view extends StatelessWidget {
           ),          
           Expanded(flex: 20, 
             child: Container(
-              child: create_button("Create Poll", context, height*2,'/a_l_p'),
+              child: create_button("Create Poll", context, height*2,'/p_c_f'),
               alignment: Alignment(0,0.5),
             )
           ),
