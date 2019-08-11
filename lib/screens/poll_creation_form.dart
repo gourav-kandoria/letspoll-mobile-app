@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import './../helpers/requests.dart';
 
-
 class poll_creation_form extends StatefulWidget {
   @override
   poll_creation_form_state createState() => poll_creation_form_state();
@@ -33,6 +32,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
   bool on_submit_usr = false;
   bool on_submit_pwd = false;
   bool on_submit_confirm_pwd = false;
+  bool isbuttondisabled = false;
 
   bool group_name_verifier() {
     if (group_controller.text == null || group_controller.text == "") {
@@ -155,9 +155,10 @@ class poll_creation_form_state extends State<poll_creation_form> {
     confirm_pwd_controller.addListener(confirm_password);
   }
 
-  Widget create_form() {
+  Widget create_form(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print("I was tapped...");
         setState(() {});
       },
       child: SingleChildScrollView(
@@ -258,77 +259,101 @@ class poll_creation_form_state extends State<poll_creation_form> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      onPressed: () {
-                        on_submit_grp = true;
-                        bool res1 = group_name_verifier();
-                        on_submit_usr = true;
-                        bool res2 = user_name_verifier();
-                        on_submit_pwd = true;
-                        bool res3 = password_verifier();
-                        on_submit_confirm_pwd = true;
-                        bool res4 = confirm_password();
-                        if (res1 && res2 && res3 && res4) {
-                          print("Everything verified");
-                          _formKey.currentState.save();
-                          var temp = "${group_name}".replaceAll(' ', '-');
-                          Future<Response> group_exists = client
-                              .get('${server_url}/api/polls/exists/${temp}');
-                          // Future<Response> asf = client
-                          //     .get();
-
-                          group_exists.then((value) {
-                            print(value);
-                            Map<String, dynamic> body = jsonDecode(value.body);
-                            if (body['exists'] == true) {
-                              err_on_grp_name =
-                                  "poll name not available! try another name";
-                              setState(() {});
-                              return;
-                            } else {
-                              print('poll name available...');
-                              var poll_future = create_group(client);
-                              poll_future.then((value) {
-                                Map<String, dynamic> poll_info =
-                                    jsonDecode(value.body);
-                                var user_future =
-                                    create_user(client, poll_info['poll_id'],user_name,password);
-                                user_future.then((value) {
-                                  print("user created...");
-                                  Map<String, dynamic> user_info =
-                                      jsonDecode(value.body);
-                                  var make_admin_future = make_admin(
-                                      client,
-                                      poll_info['poll_id'],
-                                      user_info['user_id'],
-                                      poll_info['secret_token']);
-                                  make_admin_future.then((value) {
-                                    Map<String, dynamic> admin_result =
-                                        jsonDecode(value.body);
-                                    print(admin_result['msg']);
-                                    var login_future = login_user(
-                                        client,
-                                        user_name,
-                                        password,
-                                        poll_info["poll_id"]);
-                                    login_future.then((value) {
-                                      Map<String, dynamic> login_info =
-                                          jsonDecode(value.body);
-                                      //print(login_info['token']);
-                                      var store = FlutterSecureStorage();
-                                      store.write(
-                                          key: 'letspole',
-                                          value: login_info['token']);
-                                      Navigator.pushNamedAndRemoveUntil(context,
-                                          '/homepage', (Route route) => false);
-                                    });
+                      onPressed: isbuttondisabled
+                          ? null
+                          : () {
+                              setState(() {
+                                isbuttondisabled = true;
+                              });
+                              on_submit_grp = true;
+                              bool res1 = group_name_verifier();
+                              on_submit_usr = true;
+                              bool res2 = user_name_verifier();
+                              on_submit_pwd = true;
+                              bool res3 = password_verifier();
+                              on_submit_confirm_pwd = true;
+                              bool res4 = confirm_password();
+                              if (res1 && res2 && res3 && res4) {
+                                print("Everything verified");
+                                _formKey.currentState.save();
+                                var temp = "${group_name}".replaceAll(' ', '-');
+                                Future<Response> group_exists = client.get(
+                                    '${server_url}/api/polls/exists/${temp}');
+                                // Future<Response> asf = client
+                                //     .get();
+                                group_exists.timeout(const Duration(seconds: 5),
+                                    onTimeout: () {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Couldn\'t connect to server, Please try again!'),
+                                  ));
+                                  setState(() {
+                                    isbuttondisabled = false;
                                   });
                                 });
-                              });
-                            }
-                          });
-                        }
-                        setState(() {});
-                      },
+
+                                group_exists.then((value) {
+                                  print(value);
+                                  Map<String, dynamic> body =
+                                      jsonDecode(value.body);
+                                  if (body['exists'] == true) {
+                                    setState(() {
+                                      err_on_grp_name =
+                                          "poll name not available! try another name";
+                                      isbuttondisabled = false;
+                                    });
+                                  } else {
+                                    print('poll name available...');
+                                    var poll_future = create_group(client);
+                                    poll_future.then((value) {
+                                      Map<String, dynamic> poll_info =
+                                          jsonDecode(value.body);
+                                      var user_future = create_user(
+                                          client,
+                                          poll_info['poll_id'],
+                                          user_name,
+                                          password);
+                                      user_future.then((value) {
+                                        print("user created...");
+                                        Map<String, dynamic> user_info =
+                                            jsonDecode(value.body);
+                                        var make_admin_future = make_admin(
+                                            client,
+                                            poll_info['poll_id'],
+                                            user_info['user_id'],
+                                            poll_info['secret_token']);
+                                        make_admin_future.then((value) {
+                                          Map<String, dynamic> admin_result =
+                                              jsonDecode(value.body);
+                                          print(admin_result['msg']);
+                                          var login_future = login_user(
+                                              client,
+                                              user_name,
+                                              password,
+                                              poll_info["poll_id"]);
+                                          login_future.then((value) {
+                                            Map<String, dynamic> login_info =
+                                                jsonDecode(value.body);
+                                            //print(login_info['token']);
+                                            var store = FlutterSecureStorage();
+                                            store.write(
+                                                key: 'letspole',
+                                                value: login_info['token']);
+                                            Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                '/homepage',
+                                                (Route route) => false);
+                                          });
+                                        });
+                                      });
+                                    });
+                                  }
+                                });
+                              } else
+                                setState(() {
+                                  isbuttondisabled = false;
+                                });
+                            },
                     ),
                     alignment: Alignment(0.9, 0),
                   )),
@@ -345,7 +370,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
         appBar: AppBar(
           title: Text("Create Poll"),
         ),
-        body: create_form());
+        body: create_form(context));
   }
 
   Future<Response> create_group(Client client) async {
@@ -362,8 +387,6 @@ class poll_creation_form_state extends State<poll_creation_form> {
     return response;
   }
 
-
-
   Future<Response> make_admin(Client client, String poll_id, String user_id,
       String secret_token) async {
     print("Hello World....");
@@ -379,6 +402,4 @@ class poll_creation_form_state extends State<poll_creation_form> {
         });
     return response;
   }
-
-
 }

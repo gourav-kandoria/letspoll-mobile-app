@@ -49,23 +49,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class test extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-      children: <Widget>[
-        Expanded(
-          flex: 50,
-          child: Container(
-            color: Colors.red,
-            child: Column(
-              children: <Widget>[TextField()],
-            ),
-          ),
-        ),
-        Expanded(flex: 50, child: Container(color: Colors.yellow))
-      ],
-    ));
-  }
-}
