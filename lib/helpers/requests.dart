@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
 
-const server_url = "http://9a2894ad.ngrok.io";
+const server_url = "http://fada8f2f.ngrok.io";
 
 Future<Response> create_user(
     Client client, String poll_id, String user_name, String password) async {

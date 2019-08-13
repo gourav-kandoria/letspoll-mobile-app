@@ -27,13 +27,13 @@ class first_view extends StatelessWidget {
           ),          
           Expanded(flex: 20, 
             child: Container(
-              child: create_button("Create Poll", context, height*2,'/p_c_f'),
+              child: create_button("Create Poll", context, height*2,'p_c_f'),
               alignment: Alignment(0,0.6),
             )
           ),
           Expanded(flex: 30,
             child: Container(
-              child: create_button("Join Poll", context, height*2,"/"), 
+              child: create_button("Join Poll", context, height*2,'firstview'), 
               alignment: Alignment(0,-0.8),
             ),
           )
@@ -51,10 +51,10 @@ Widget create_button(String str, BuildContext context, var minw, String nav) {
   return  ButtonTheme(
       minWidth: minw-10,
       child: OutlineButton(
-      splashColor: Colors.green,
+      splashColor: Colors.grey,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.green),
+      highlightElevation: 40,
+      borderSide: BorderSide(color: Colors.grey),
       child:         
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),

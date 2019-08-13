@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lets_pole/file.dart';
 
 class homepage extends StatefulWidget {
   @override
+  String token;
+  homepage(this.token);
   homepagestate createState() {
     // TODO: implement createState
-    return homepagestate();
+    return homepagestate(token);
   }
 }
 
@@ -14,10 +17,7 @@ class homepagestate extends State<homepage> {
   String token;  
   String payload;
   String decoded;
-
-  void initState() {
-
-  }
+  homepagestate(this.token);
 
   Widget build(BuildContext context) {
 
@@ -27,7 +27,7 @@ class homepagestate extends State<homepage> {
               child: Center(
                 child: Text('''Congrats Logged In
 Your Personal token is 
-'$decoded' ''')
+'$token' ''')
             )
             )),
             bottomNavigationBar: BottomNavigationBar(

@@ -4,27 +4,25 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lets_pole/screens/first_view.dart';
 import 'package:lets_pole/screens/homepage.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-String initial_route = '/';
-void main() async {
-  var store = FlutterSecureStorage();
-  var token = await store.read(key: 'letspoll');
-  print('Hello World ${token} Hello World');
-  if (token != null) {
-    print('homepage');
-    initial_route = '/homepage';
-    print('Hello World ${token} Hello World');
-    String payload = token.split('.')[1];
-    String decoded = B64urlEncRfc7515.decodeUtf8(payload); 
-
-    runApp(MyApp());
-  } else if(token==null){
-    print('/');
-    initial_route = '/';
-    runApp(MyApp());
-  } else {
-    print("Hello World");
+String initial_route = null;
+String tok;
+void main() async{
+  final store = await SharedPreferences.getInstance();
+  try {String token = store.getString('letspole');
+    tok = token;
+    if(token!= null){
+      initial_route = 'homepage';
+      runApp(MyApp());
+    }
+    else {
+      initial_route = 'firstview';
+      runApp(MyApp());
+    }
+  }
+  catch(e) {
+    print(e);
   }
 }
 
@@ -49,9 +47,11 @@ class MyApp extends StatelessWidget {
       initialRoute: initial_route,
       routes: {
         '/': (context) => first_view(),
-        '/p_c_f': (context) => poll_creation_form(),
-        '/homepage': (context) => homepage(),
+        'firts_view': (context) => first_view(),
+        'p_c_f': (context) => poll_creation_form(),
+        'homepage': (context) => homepage(tok),
       },
     );
   }
 }
+

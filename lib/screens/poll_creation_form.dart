@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lets_pole/helpers/requests.dart';
 import 'package:lets_pole/models/Poll.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class poll_creation_form extends StatefulWidget {
   @override
   poll_creation_form_state createState() => poll_creation_form_state();
@@ -275,10 +276,10 @@ class poll_creation_form_state extends State<poll_creation_form> {
                               bool res4 = confirm_password();
                               if (res1 && res2 && res3 && res4) {
                                 print("Everything verified");
-                                Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                '/homepage',
-                                                (Route route) => false);
+                                // Navigator.pushNamedAndRemoveUntil(
+                                //                 context,
+                                //                 '/homepage',
+                                //                 (Route route) => false);
                                 _formKey.currentState.save();
                                  var temp = "${group_name}".replaceAll(' ', '-');
                                 Future<Response> group_exists = client.get(
@@ -339,17 +340,17 @@ class poll_creation_form_state extends State<poll_creation_form> {
                                           login_future.then((value) {
                                             Map<String, dynamic> login_info =
                                                 jsonDecode(value.body);
-                                            //print(login_info['token']);
-                                            var store = FlutterSecureStorage();
-                                            store.write(
-                                                key: 'letspole',
-                                                value: login_info['token']);
-                                                var poll =  Provider.of<Poll>(context);
-                                                poll = Poll(poll_info["poll_id"],user_info["user_id"],poll_info["poll_name"]);
+                                                // var poll =  Provider.of<Poll>(context,listen: false);
+                                                // poll = Poll(poll_info["poll_id"],user_info["user_id"],poll_info["poll_name"]);
+                                                var prefs = SharedPreferences.getInstance();
+                                                prefs.then((value) {
+                                                  value.setString('letspole', login_info['token']);
                                             Navigator.pushNamedAndRemoveUntil(
                                                 context,
-                                                '/homepage',
+                                                'homepage',
                                                 (Route route) => false);
+                                                }
+                                                );
                                           });
                                         });
                                       });
