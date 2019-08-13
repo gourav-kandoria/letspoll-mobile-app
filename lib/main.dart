@@ -46,11 +46,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initial_route,
       routes: {
+        
         '/': (context) => first_view(),
         'firts_view': (context) => first_view(),
         'p_c_f': (context) => poll_creation_form(),
         'homepage': (context) => homepage(tok),
-        
+
       },
     );
   }
