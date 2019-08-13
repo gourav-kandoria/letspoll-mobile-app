@@ -3,22 +3,28 @@ import 'package:lets_pole/screens/poll_creation_form.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lets_pole/screens/first_view.dart';
 import 'package:lets_pole/screens/homepage.dart';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
 
-const server_url = "http://192.168.43.232:8000";
+
 String initial_route = '/';
 void main() async {
   var store = FlutterSecureStorage();
   var token = await store.read(key: 'letspoll');
+  print('Hello World ${token} Hello World');
   if (token != null) {
     print('homepage');
     initial_route = '/homepage';
+    print('Hello World ${token} Hello World');
+    String payload = token.split('.')[1];
+    String decoded = B64urlEncRfc7515.decodeUtf8(payload); 
+
     runApp(MyApp());
   } else if(token==null){
     print('/');
     initial_route = '/';
     runApp(MyApp());
   } else {
-    print("Hello Wordl");
+    print("Hello World");
   }
 }
 

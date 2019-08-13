@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import './../helpers/requests.dart';
-
+import 'package:lets_pole/helpers/requests.dart';
+import 'package:lets_pole/models/Poll.dart';
+import 'package:provider/provider.dart';
 class poll_creation_form extends StatefulWidget {
   @override
   poll_creation_form_state createState() => poll_creation_form_state();
@@ -73,7 +73,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
           on_submit_grp = false;
           print("setting state....");
           err_on_grp_name =
-              "Only Characters Allowed\n( 'a' to 'z', 'A' to 'Z', '0; to '9' and underscore(' _ ') )";
+              "Only Characters Allowed\n( 'a' to 'z', 'A' to 'Z', '0' to '9' and underscore(' _ ') )";
         });
         return false;
       }
@@ -168,7 +168,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.fromLTRB(25, 50, 20, 0),
+                padding: EdgeInsets.fromLTRB(25, 40, 20, 0),
                 child: TextFormField(
                   controller: group_controller,
                   onSaved: (String value) {
@@ -189,7 +189,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(25, 50, 20, 0),
+                padding: EdgeInsets.fromLTRB(25, 40, 20, 0),
                 child: TextFormField(
                   controller: user_contoller,
                   onSaved: (String value) {
@@ -210,7 +210,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(25, 50, 20, 0),
+                padding: EdgeInsets.fromLTRB(25, 40, 20, 0),
                 child: TextFormField(
                   controller: password_controller,
                   obscureText: true,
@@ -232,7 +232,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(25, 50, 20, 0),
+                padding: EdgeInsets.fromLTRB(25, 40, 20, 0),
                 child: TextFormField(
                   controller: confirm_pwd_controller,
                   obscureText: true,
@@ -275,18 +275,23 @@ class poll_creation_form_state extends State<poll_creation_form> {
                               bool res4 = confirm_password();
                               if (res1 && res2 && res3 && res4) {
                                 print("Everything verified");
+                                Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                '/homepage',
+                                                (Route route) => false);
                                 _formKey.currentState.save();
-                                var temp = "${group_name}".replaceAll(' ', '-');
+                                 var temp = "${group_name}".replaceAll(' ', '-');
                                 Future<Response> group_exists = client.get(
                                     '${server_url}/api/polls/exists/${temp}');
                                 // Future<Response> asf = client
                                 //     .get();
                                 group_exists.timeout(const Duration(seconds: 5),
                                     onTimeout: () {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Couldn\'t connect to server, Please try again!'),
-                                  ));
+                                  // Scaffold.of(context).showSnackBar(SnackBar(
+                                  //   content: Text(
+                                  //       'Couldn\'t connect to server, Please try again!'),
+                                  // ));
+                                  print("Time out");
                                   setState(() {
                                     isbuttondisabled = false;
                                   });
@@ -339,6 +344,8 @@ class poll_creation_form_state extends State<poll_creation_form> {
                                             store.write(
                                                 key: 'letspole',
                                                 value: login_info['token']);
+                                                var poll =  Provider.of<Poll>(context);
+                                                poll = Poll(poll_info["poll_id"],user_info["user_id"],poll_info["poll_name"]);
                                             Navigator.pushNamedAndRemoveUntil(
                                                 context,
                                                 '/homepage',

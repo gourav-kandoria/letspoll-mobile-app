@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
 
-const server_url = "http://192.168.43.232:8000";
+const server_url = "http://9a2894ad.ngrok.io";
 
 Future<Response> create_user(
     Client client, String poll_id, String user_name, String password) async {
@@ -34,4 +34,23 @@ Future<Response> login_user(
         "Accept": "Application/json"
       });
   return response;
+}
+
+Future<Response> get_pole_name(Client client, String poll_id) async{
+  Response response = await client.post('${server_url}/api/',
+  body: jsonEncode({}),
+  headers: {
+    "content-type": "application/json",
+    "Accept": "Application/json"
+  });
+  return response;
+}
+
+Future<Response> get_status(Client client, String poll_id) async {
+  Response response = await client.post('${server_url}/api/',
+  body: jsonEncode({}),
+  headers: {
+    "content-type": "application/json",
+    "Accept": "Application/json",
+  });
 }

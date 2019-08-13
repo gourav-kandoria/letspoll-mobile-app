@@ -10,23 +10,42 @@ class homepage extends StatefulWidget {
 }
 
 class homepagestate extends State<homepage> {
+  @override
+  String token;  
+  String payload;
+  String decoded;
+
+  void initState() {
+
+  }
+
   Widget build(BuildContext context) {
-    var token;
-    var store = FlutterSecureStorage();
-    var result = store.read(key: 'letspole');
-    result.then((value) {
-      setState(() {token = value;});
-    }
-    );
+
     return Scaffold (
             body: Center(child:
               Container(
               child: Center(
                 child: Text('''Congrats Logged In
 Your Personal token is 
-'$token' ''')
+'$decoded' ''')
             )
-            ))
+            )),
+            bottomNavigationBar: BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home), 
+                  title: Text("Home"),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.question_answer), 
+                  title: Text("Questions"),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.poll), 
+                  title: Text("Voter List"),
+                ),
+              ],
+            ),
            );
   }
-}
+  }

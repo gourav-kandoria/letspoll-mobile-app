@@ -28,7 +28,7 @@ class first_view extends StatelessWidget {
           Expanded(flex: 20, 
             child: Container(
               child: create_button("Create Poll", context, height*2,'/p_c_f'),
-              alignment: Alignment(0,0.5),
+              alignment: Alignment(0,0.6),
             )
           ),
           Expanded(flex: 30,
@@ -52,12 +52,12 @@ Widget create_button(String str, BuildContext context, var minw, String nav) {
       minWidth: minw-10,
       child: OutlineButton(
       splashColor: Colors.green,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
       borderSide: BorderSide(color: Colors.green),
       child:         
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child:Text(str,style: TextStyle(fontSize: 18),),
         ),
       onPressed: () { Navigator.pushNamed(context, nav);},
