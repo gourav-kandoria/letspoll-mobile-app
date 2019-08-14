@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lets_pole/models/Poll.dart';
 import 'package:provider/provider.dart';
-class homepage extends StatefulWidget {
+
+class question extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return homepagestate();
+    return questionstate();
   }
 }
-class homepagestate extends State<homepage>{
+class questionstate extends State<question>{
   Widget build(context) {
   var poll  = Provider.of<Poll>(context, listen: true);
-  return Center(child: Text("I am inside Homepage and my poll id is ${poll.poll_id}"));
+  return Center(child: Text("Inside Questions and my user id is ${poll.user_id}"));
   }
 }

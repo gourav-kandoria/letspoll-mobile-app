@@ -12,8 +12,8 @@ class Poll extends ChangeNotifier {
   bool isadmin;
   String Description;
   List<Question> l;
-  Poll(this.poll_id, this.user_id, this.poll_name);
-
+  Poll();
+  Poll.create(this.poll_id, this.user_id, this.poll_name);
   fetch_status() async {
     var response = await get_status(client, poll_id);
     Map<String, dynamic> pole_status_info = jsonDecode(response.body);
