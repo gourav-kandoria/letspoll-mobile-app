@@ -12,6 +12,6 @@ class question extends StatefulWidget {
 class questionstate extends State<question>{
   Widget build(context) {
   var poll  = Provider.of<Poll>(context, listen: true);
-  return Center(child: Text("Inside Questions and my user id is ${poll.user_id}"));
+  return Center(child: Text("Inside Questions and my user id is ${poll.user_name}"));
   }
 }

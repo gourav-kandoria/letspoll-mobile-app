@@ -278,17 +278,7 @@ class poll_creation_form_state extends State<poll_creation_form> {
                                 bool res4 = confirm_password();
                                 if (res1 && res2 && res3 && res4) {
                                   print("Everything verified");
-                                  var prefs = SharedPreferences.getInstance();
-                                                  prefs.then((value) {
-                                                    value.setString('letspole', "kalikutti");
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  'logged_in_screen',
-                                                  (Route route) => false,
-                                                  arguments: "Kalikutti",
-                                                  );
-                                                  }
-                                                  );
+
                                   _formKey.currentState.save();
                                    var temp = "${group_name}".replaceAll(' ', '-');
                                   Future<Response> group_exists = client.get(
@@ -297,10 +287,10 @@ class poll_creation_form_state extends State<poll_creation_form> {
                                   //     .get();
                                   group_exists.timeout(const Duration(seconds: 5),
                                       onTimeout: () {
-                                    // Scaffold.of(context).showSnackBar(SnackBar(
-                                    //   content: Text(
-                                    //       'Couldn\'t connect to server, Please try again!'),
-                                    // ));
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                          'Couldn\'t connect to server, Please try again!'),
+                                    ));
                                     print("Time out");
                                     setState(() {
                                       isbuttondisabled = false;
